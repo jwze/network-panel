@@ -1,0 +1,22 @@
+# 本地工具数据与重构过程产物（备份、截图、诊断脚本）
+.workbuddy/
+unslop/
+
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+*.log
+
+# 编辑器与系统文件
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# 本地临时预览文件
+_orig_preview.html
+*.tmp

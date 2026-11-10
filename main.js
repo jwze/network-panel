@@ -111,6 +111,7 @@ async function start() {
     document.getElementById('describe').innerText = '实时速度';
     document.getElementById('do').innerText = '停止';
     document.getElementById('do').disabled = false;
+    document.body.classList.add('is-running');
     var num = maxtheard
     lsat_all_down = 0
     start_time = new Date().getTime()
@@ -126,6 +127,7 @@ async function start() {
 
 function stop() {
     run = false
+    document.body.classList.remove('is-running');
     document.getElementById('do').innerText = '开始';
 }
 
@@ -158,6 +160,43 @@ function checkURL(URL) {
 
 var cnip = ''
 
+function renderVisitInfo(d) {
+    var el = document.getElementById('visitInfo')
+    if (!el) return
+    var ua = navigator.userAgent
+    var br = ua.match(/(Edg|OPR|Chrome|Firefox|Safari|MSIE)[\/\s]([\d.]+)/)
+    var browser = br ? (br[1] === 'Edg' ? 'Edge' : br[1] === 'OPR' ? 'Opera' : br[1]) + ' ' + br[2].split('.')[0] : '浏览器'
+    var os = /Windows NT 10/.test(ua) ? 'Windows 10'
+        : /Windows/.test(ua) ? 'Windows'
+        : /Mac OS X/.test(ua) ? 'macOS'
+        : /Android/.test(ua) ? 'Android'
+        : /iPhone|iPad/.test(ua) ? 'iOS' : '其他系统'
+    var pad = function (v) { return v < 10 ? '0' + v : '' + v }
+    var stamp = function () {
+        var n = new Date()
+        return n.getFullYear() + '-' + pad(n.getMonth() + 1) + '-' + pad(n.getDate()) + ' ' + pad(n.getHours()) + ':' + pad(n.getMinutes()) + ':' + pad(n.getSeconds())
+    }
+    var rows = [
+        ['IP 地址', d['ip'] || '-'],
+        ['归属地', [d['province'], d['city'], d['distinct'], d['isp']].filter(Boolean).join(' ') || '-'],
+        ['浏览器', browser + ' · ' + os],
+        ['本地时间', stamp()]
+    ]
+    el.innerHTML = rows.map(function (r, i) {
+        return '<div class="np-visit-k">' + r[0] + '</div><div class="np-visit-v' + (i === 3 ? ' np-visit-time' : '') + '"></div>'
+    }).join('')
+    var vals = el.querySelectorAll('.np-visit-v')
+    rows.forEach(function (r, i) { vals[i].textContent = r[1] })
+    if (!window.visitClock) {
+        window.visitClock = setInterval(function () {
+            var t = document.querySelector('.np-visit-time')
+            if (t) t.textContent = stamp()
+        }, 1000)
+    }
+}
+
+renderVisitInfo({});
+
 function ipcn() {
     if (visibl) {
         fetch('https://forge.speedtest.cn/api/location/info', { referrerPolicy: 'no-referrer' })
@@ -165,6 +204,7 @@ function ipcn() {
             .then(data => {
                 var tag = document.getElementById("ipcn")
                 tag.innerText = data['ip'] + ' ' + data['province'] + ' ' + data['city'] + ' ' + data['distinct'] + ' ' + data['isp']
+                renderVisitInfo(data)
                 if (data['ip'] !== cnip) {
                     tag.style.color = ''
                     ckip(data['ip'], tag)
@@ -234,9 +274,9 @@ function ckbl() {
         setTimeout(() => controller.abort(), 2000);
         fetch("https://www.google.com/", { signal: controller.signal, method: "HEAD", cache: "no-store", mode: 'no-cors', referrerPolicy: 'no-referrer' })
             .then(function() {
-                document.getElementById("laygb").style.color = "green";
+                document.getElementById("laygb").style.color = "#15803d";
             })
-            .catch(error => document.getElementById("laygb").style.color = "red");
+            .catch(error => document.getElementById("laygb").style.color = "#b91c1c");
     }
     setTimeout(ckbl, 1000)
 }
@@ -247,7 +287,7 @@ function ckip(ip, tag) {
             .then(response => response.json())
             .then(data => {
                 console.log(data.input, data.data.country, data.data.city, data.data.asn.name, data.data.company.type)
-                if (data.data.company.type === "isp") tag.style.color = "green"
+                if (data.data.company.type === "isp") tag.style.color = "#15803d"
             });
     }
 }
@@ -277,73 +317,78 @@ var chartDom = document.getElementById('dv');
 var myChart = echarts.init(chartDom);
 var option;
 
+var chartMono = "IBM Plex Mono, SFMono-Regular, Consolas, monospace";
+var chartInk = '#1a1e24';
+var chartInk2 = '#525b66';
+var chartInk3 = '#7d8691';
+var chartLine = 'rgba(26, 30, 36, 0.08)';
+var chartAccent = '#c1440e';
+var chartQuiet = '#b0b7be';
+
 option = {
+    backgroundColor: 'transparent',
+    animationDuration: 300,
+    textStyle: { fontFamily: chartMono, color: chartInk2 },
     tooltip: {
         trigger: 'axis',
-        axisPointer: {
-            type: 'cross',
-            label: {
-                backgroundColor: '#6a7985'
-            }
-        }
+        backgroundColor: '#ffffff',
+        borderColor: 'rgba(26, 30, 36, 0.16)',
+        borderWidth: 1,
+        padding: [8, 12],
+        textStyle: { color: chartInk, fontSize: 12, fontFamily: chartMono },
+        axisPointer: { type: 'line', lineStyle: { color: 'rgba(26, 30, 36, 0.28)', width: 1, type: 'dashed' } }
     },
-    legend: {
-        data: ['Speed', 'Local Ping', 'Global Ping']
-    },
+    legend: { show: false, data: ['速率', '延迟'] },
     toolbox: {
-        feature: {
-            saveAsImage: {}
-        }
+        right: 4,
+        top: 0,
+        itemSize: 14,
+        iconStyle: { borderColor: chartInk3 },
+        emphasis: { iconStyle: { borderColor: chartAccent } },
+        feature: { saveAsImage: { title: '保存图片', pixelRatio: 2 } }
     },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
+    grid: { left: 8, right: 16, top: 24, bottom: 8, containLabel: true },
     xAxis: [{
         type: 'category',
-        name: "时间(s)",
         boundaryGap: false,
+        axisLine: { lineStyle: { color: chartLine } },
+        axisTick: { show: false },
+        axisLabel: { color: chartInk3, fontSize: 11, fontFamily: chartMono },
+        splitLine: { show: false }
     }],
     yAxis: [{
-            type: 'value',
-            name: "延迟(ms)",
-            splitLine: {
-                show: false
-            }
-        },
-        {
-            type: 'value',
-            name: "速率(MB/s)",
-            splitLine: {
-                show: false
-            }
-        }
-    ],
+        type: 'value',
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { color: chartInk3, fontSize: 11, fontFamily: chartMono },
+        splitLine: { show: true, lineStyle: { color: chartLine, width: 1 } }
+    }, {
+        type: 'value',
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { color: chartInk3, fontSize: 11, fontFamily: chartMono },
+        splitLine: { show: false }
+    }],
     series: [{
-            name: '速率',
-            type: 'line',
-            stack: 'Total',
-            yAxisIndex: 1,
-            areaStyle: {},
-            emphasis: {
-                focus: 'series'
-            },
-            data: [{
-                name: new Date(),
-                value: now_global_ping
-            }]
-        },
-        {
-            name: '延迟',
-            type: 'line',
-            data: [{
-                name: new Date(),
-                value: now_global_ping
-            }]
-        }
-    ]
+        name: '速率',
+        type: 'line',
+        yAxisIndex: 1,
+        showSymbol: false,
+        smooth: 0.25,
+        lineStyle: { color: chartAccent, width: 2.5 },
+        itemStyle: { color: chartAccent },
+        areaStyle: { color: 'rgba(193, 68, 14, 0.10)' },
+        emphasis: { focus: 'series' },
+        data: [{ name: new Date(), value: now_global_ping }]
+    }, {
+        name: '延迟',
+        type: 'line',
+        showSymbol: false,
+        smooth: 0.25,
+        lineStyle: { color: chartQuiet, width: 1.5 },
+        itemStyle: { color: chartQuiet },
+        data: [{ name: new Date(), value: now_global_ping }]
+    }]
 };
 
 option && myChart.setOption(option);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" class="js">
+<html lang="zh-CN">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -8,10 +8,8 @@
     <meta name="keywords" content="IP查询,IP归属查询,在线测速,网速测试,多地IP查询,流量杀手网页,流量杀手在线">
     <meta name="description" content="测试您的网速，多地查询您的IP地址，同时具备网络延迟实时检测">
     <meta http-equiv="Cache-Control" content="no-store" />
-    <link rel="stylesheet" href="./res/dashlite.css">
     <link rel="stylesheet" href="./res/style.css">
     <link rel="icon" href="https://q.qlogo.cn/headimg_dl?dst_uin=5754195&spec=640" type="image/png">
-    <link rel="stylesheet" href="./res/layer.css" id="layuicss-layer">
     <script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
     <script>
         var _hmt = _hmt || [];
@@ -24,71 +22,55 @@
     </script>
 </head>
 
-<body class="nk-body npc-invest bg-lighter no-touch nk-nio-theme" style="cursor:pointer">
-    <!-- wrap @s -->
-    <div class="nk-wrap ">
-        <!-- main header @s -->
-        <div class="nk-header nk-header-fluid nk-header-fixed is-light">
-            <div class="container-xl">
-                <div class="nk-header-wrap link-between">
-                    <div class="nk-header-brand">
-                        <a href="#" class="logo-link text-base"><img
-                                src="https://q.qlogo.cn/headimg_dl?dst_uin=582424565&spec=640"
-                                class="hide-mb-sm">JVZ-网络面板</a>
-                    </div>
-                    <!-- .nk-header-brand -->
-                    <div class="nk-header-tools nk-header-menu" data-content="headerNav">
-                        <!-- Menu -->
-                        <ul class="nk-menu nk-menu-main">
-                            <li class="nk-menu-item ">
-                                <a href="/" class="nk-menu-link nk-ibx-action-item" data-original-title="" title="">
-                                    <em class="icon ni ni-home"></em>
-                                    <span class="nk-menu-text">首页</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- .nk-header-tools -->
-                </div>
-                <!-- .nk-header-wrap -->
+<body class="np-body">
+    <header class="np-topbar">
+        <div class="np-shell np-topbar-inner">
+            <a class="np-brand" href="#">
+                <span class="np-mark" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 13h3l2.5-6 4 12 2.5-6H21" />
+                    </svg>
+                </span>
+                <span class="np-brand-name">JVZ 网络面板</span>
+            </a>
+            <div class="np-topbar-right">
+                <span class="np-status" aria-live="polite">
+                    <i class="np-dot" aria-hidden="true"></i>
+                    <span class="np-status-text">
+                        <span class="np-state-idle">待机</span>
+                        <span class="np-state-run">测量中</span>
+                    </span>
+                </span>
+                <a class="np-navlink" href="/">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 10.5 12 3l9 7.5" />
+                        <path d="M5.5 9.5V20h13V9.5" />
+                        <path d="M10 20v-6h4v6" />
+                    </svg>
+                    首页
+                </a>
             </div>
-            <!-- .container-fliud -->
         </div>
-        <!-- main header @e -->
-        <!-- content @s -->
-        <div class="nk-content nk-content-lg nk-content-fluid">
+    </header>
 
-            <style>
-                .stat {
-                    width: 100%;
-                    column-gap: 1rem;
-                    padding: 1rem 1.5rem;
-                }
+    <main class="np-shell np-main" id="app">
+        <div class="np-board">
+            <div class="np-board-grid">
+                <div class="np-col np-col-side">
+                    <section class="np-block np-block-setup">
+                        <div class="np-panel-head">
+                            <span class="np-index">01</span>
+                            <h2>测速设置</h2>
+                        </div>
 
-                .stat-title {
-                    white-space: nowrap;
-                    opacity: .6;
-                }
-
-                .stat-value {
-                    white-space: nowrap;
-                    grid-column-start: 1;
-                    font-size: 1.8rem;
-                    font-weight: 700;
-                    line-height: 2.5rem
-                }
-            </style>
-            <div id="app" class="container-xl">
-                <div class="col-sm-12 col-md-10 col-xl-8 center-block">
-                    <div class="card card-preview">
-                        <div class="card-inner mt-3">
-                            <div class="nya-title nk-ibx-action-item progress-rating"><span
-                                    class="nk-menu-text font-weight-bold">JVZ-网络面板</span></div>
-                            <div class="form-group"><label class="form-label">测试地址</label>
-                                <div class="form-control-wrap">
-                                    <select id='select'
-                                        onchange="document.getElementById('link').value=this.options[this.selectedIndex].value;setCookie('select',this.selectedIndex,365);"
-                                        type="text" class="form-control">
+                        <div class="np-field">
+                            <label class="np-label" for="select">测试地址</label>
+                            <div class="np-select-wrap">
+                                <select id='select'
+                                    onchange="document.getElementById('link').value=this.options[this.selectedIndex].value;setCookie('select',this.selectedIndex,365);"
+                                    type="text" class="np-select">
                                         <option value="" id="diy">自定义</option>
                                         <option selected="selected"
                                             value="https://issuecdn.baidupcs.com/issue/netdisk/apk/BaiduNetdiskSetup_wap_share.apk">
@@ -133,7 +115,7 @@
                                         </option>
                                         <option value="https://speed.cloudflare.com/__down?bytes=1073741824">Cloudflare
                                             Speed [Global]</option>
-                                        <option value="">↓↓ 备用地址 ↓↓</option>
+                                        <option value="">备用地址</option>
                                         <option
                                             value="https://i0.hdslb.com/bfs/album/6a259a872289fbf56e61876c9b8870a9868325af.jpg"
                                             selected="selected">B站非免流</option>
@@ -225,251 +207,285 @@
                                         </option>
                                         <option value="https://speedtest.tokyo2.linode.com/100MB-tokyo2.bin">Linode
                                             100MB(日本省东京市)</option>
-                                    </select>
-                                    <input value=""
-                                        oninput="document.getElementById('select').selectedIndex=0;document.getElementById('diy').value=this.value;setCookie('diy',this.value,365);setCookie('select',0,365);"
-                                        type="text" id="link" placeholder="请输入下载链接" autocomplete="off"
-                                        class="form-control">
-                                </div>
+                                    
+                        
+                    
+                                </select>
+                                <svg class="np-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" aria-hidden="true">
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
                             </div>
-                            <div class="form-group"><label class="form-label">线程</label>
-                                <div class="form-control-wrap number-spinner-wrap"><button
+                        </div>
+
+                        <div class="np-field">
+                            <label class="np-label" for="link">自定义链接</label>
+                            <input value=""
+                                oninput="document.getElementById('select').selectedIndex=0;document.getElementById('diy').value=this.value;setCookie('diy',this.value,365);setCookie('select',0,365);"
+                                type="text" id="link" placeholder="自定义下载链接" autocomplete="off" class="np-input">
+                        </div>
+
+                        <div class="np-field np-field-row">
+                            <div class="np-field-col">
+                                <label class="np-label" for="thread">线程 <span class="np-meta">1–32</span></label>
+                                <div class="np-stepper">
+                                    <button type="button"
                                         onclick="var thread=document.getElementById('thread');if(thread.value!=thread.min)thread.value--;"
-                                        class="btn btn-icon btn-outline-primary number-spinner-btn number-minus"><em
-                                            class="icon ni ni-minus"></em></button> <input
-                                        onchange="var self= document.getElementById('thread');if(self.value<self.min)self.value=self.min;if(self.value>self.max)self.value=self.max"
-                                        id='thread' type="number" min="1" max="32" value=1
-                                        class="form-control number-spinner"> <button
+                                        class="np-step" aria-label="减少线程">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                                            <path d="M5 12h14" />
+                                        </svg>
+                                    </button>
+                                    <input onchange="var self= document.getElementById('thread');if(self.value<self.min)self.value=self.min;if(self.value>self.max)self.value=self.max"
+                                        id='thread' type="number" min="1" max="32" value=1 class="np-stepper-input">
+                                    <button type="button"
                                         onclick="var thread=document.getElementById('thread');if(thread.value!=thread.max)thread.value++;"
-                                        class="btn btn-icon btn-outline-primary number-spinner-btn number-plus"><em
-                                            class="icon ni ni-plus"></em></button>
+                                        class="np-step" aria-label="增加线程">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                                            <path d="M12 5v14M5 12h14" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="form-group" id="back">
-                                <div class="preview-block">
-                                    <div class="custom-control custom-switch checked"><input
-                                            onclick="musiccontrol(this)" type="checkbox" id="customSwitch2"
-                                            class="custom-control-input"> <label for="customSwitch2"
-                                            class="custom-control-label">保持后台运行</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <button onclick="botton_clicked();" type="button" id="do"
-                                class="btn btn-dim btn-outline-secondary btn-block card-link">
-                                开始
-                            </button>
-                            <div class="row mt-4">
-                                <div class="col-sm-12 col-md-4 border stat"
-                                    onclick='inputMax=prompt("请输入流量上限(GB)\n不填为不设置上限","");if(inputMax !== null)setMax(inputMax)'>
-                                    <div class="text-dark"><svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor"
-                                            class="h-15 w-15 float-right pt-3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z">
-                                            </path>
-                                        </svg></div>
-                                    <div class="stat-title">总流量
-                                        <a id="showMax"></a>
-                                    </div>
-                                    <div class="stat-value" id="total">-</div>
-                                </div>
-                                <div class="col-sm-12 col-md-4 border stat">
-                                    <div class="text-info"><svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor"
-                                            class="h-15 w-15 float-right pt-3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                                d="M16.469,8.924l-2.414,2.413c-0.156,0.156-0.408,0.156-0.564,0c-0.156-0.155-0.156-0.408,0-0.563l2.414-2.414c1.175-1.175,1.175-3.087,0-4.262c-0.57-0.569-1.326-0.883-2.132-0.883s-1.562,0.313-2.132,0.883L9.227,6.511c-1.175,1.175-1.175,3.087,0,4.263c0.288,0.288,0.624,0.511,0.997,0.662c0.204,0.083,0.303,0.315,0.22,0.52c-0.171,0.422-0.643,0.17-0.52,0.22c-0.473-0.191-0.898-0.474-1.262-0.838c-1.487-1.485-1.487-3.904,0-5.391l2.414-2.413c0.72-0.72,1.678-1.117,2.696-1.117s1.976,0.396,2.696,1.117C17.955,5.02,17.955,7.438,16.469,8.924 M10.076,7.825c-0.205-0.083-0.437,0.016-0.52,0.22c-0.083,0.205,0.016,0.437,0.22,0.52c0.374,0.151,0.709,0.374,0.997,0.662c1.176,1.176,1.176,3.088,0,4.263l-2.414,2.413c-0.569,0.569-1.326,0.883-2.131,0.883s-1.562-0.313-2.132-0.883c-1.175-1.175-1.175-3.087,0-4.262L6.51,9.227c0.156-0.155,0.156-0.408,0-0.564c-0.156-0.156-0.408-0.156-0.564,0l-2.414,2.414c-1.487,1.485-1.487,3.904,0,5.391c0.72,0.72,1.678,1.116,2.696,1.116s1.976-0.396,2.696-1.116l2.414-2.413c1.487-1.486,1.487-3.905,0-5.392C10.974,8.298,10.55,8.017,10.076,7.825">
-                                            </path>
-                                        </svg></div>
-                                    <div class="stat-title" id="describe">实时速度</div>
-                                    <div class="stat-value text-info" id="speed">-</div>
-                                </div>
-                                <div class="col-sm-12 col-md-4 border stat">
-                                    <div class="text-dark"><svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor"
-                                            class="h-15 w-15 float-right pt-3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                        </svg></div>
-                                    <div class="stat-title">带宽</div>
-                                    <div class="stat-value" id="mbps">-</div>
-                                </div>
+                            <div class="np-field-col" id="back">
+                                <span class="np-label">后台</span>
+                                <label class="np-switch" for="customSwitch2">
+                                    <input onclick="musiccontrol(this)" type="checkbox" id="customSwitch2"
+                                        class="np-switch-input">
+                                    <span class="np-switch-track" aria-hidden="true"><span class="np-switch-thumb"></span></span>
+                                    <span class="np-switch-label">保持后台运行</span>
+                                </label>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card card-preview">
-                        <!-- <div class="card-inner"></div> -->
-                        <div id="dv" style="position: relative;height: 300px;overflow: hidden;"></div>
-                    </div>
+                        <button onclick="botton_clicked();" type="button" id="do" class="np-primary">开始</button>
+                    </section>
 
-                    <div class="card card-preview">
-                        <div class="card-inner">
-                            <h6><em class="icon ni ni-info"></em>出口地址</h6>
-                            <div class="accordion-inner">
-                                <li class="nk-menu-item ">
-                                    <a class="text-waring" style="pointer-events:none;" id="ipcn">Loading...</a>
-                                    <a class="text-waring" style="pointer-events:none;float: right;" id="laycn">-ms</a>
-                                </li>
-                                <li class="nk-menu-item ">
-                                    <a style="pointer-events:none;" id="ipgb">Loading...</a>
-                                    <a style="pointer-events:none;float: right;" id="laygb">-ms</a>
-                                </li>
-                                <p>
-                                    <hr>
-
-                                <p>您的访问信息如下：</p>
-                                <li class="nk-menu-item ">
-                                    <p class="text-danger">
-                                        <script>ipinfo()</script>
-                                    </p>
-                                    <p>
-                                </li>
-                                <img src="http://jvze.me" onError="this.src='https://tool.lu/netcard/'">
-                                </p>
-                            </div>
+                    <section class="np-block np-block-egress">
+                        <div class="np-panel-head">
+                            <span class="np-index">04</span>
+                            <h2>出口地址</h2>
                         </div>
-                    </div>
+                        <div class="np-egress-row">
+                            <div class="np-egress-main">
+                                <span class="np-meta">国内出口</span>
+                                <span id="ipcn" class="np-egress-ip">Loading...</span>
+                            </div>
+                            <span id="laycn" class="np-egress-lat np-mono">-ms</span>
+                        </div>
+                        <div class="np-egress-row">
+                            <div class="np-egress-main">
+                                <span class="np-meta">国际出口</span>
+                                <span id="ipgb" class="np-egress-ip">Loading...</span>
+                            </div>
+                            <span id="laygb" class="np-egress-lat np-mono">-ms</span>
+                        </div>
+                    </section>
+
+                    <section class="np-block np-block-visit">
+                        <div class="np-panel-head">
+                            <span class="np-index">05</span>
+                            <h2>访问信息</h2>
+                        </div>
+                        <script>if (typeof ipinfo === 'function') ipinfo()</script>
+                        <div id="visitInfo" class="np-visit-info"></div>
+                        <img src="http://jvze.me" onError="this.src='https://tool.lu/netcard/'">
+                    </section>
                 </div>
-                <div class="mt-5 text-center">
-                    <p id='hitokoto' class="text-gray"></p>
-                    <a href="http://jvze.me" class="btn btn-sm btn-outline-light ">
-                        <em class="icon ni ni-heart">收藏本页</em><em class="icon ni ni-heart"></em>
-                    </a>
-                    <br />
 
-                    <br />
+                <div class="np-col np-col-main">
+                    <section class="np-block np-block-stats">
+                        <div class="np-panel-head">
+                            <span class="np-index">02</span>
+                            <h2>实时读数</h2>
+                            <span class="np-meta np-head-meta">点击「总流量」可设置上限</span>
+                        </div>
+                        <div class="np-readout-row">
+                            <div class="np-readout np-readout-clickable"
+                                onclick='inputMax=prompt("请输入流量上限(GB)\n不填为不设置上限","");if(inputMax !== null)setMax(inputMax)'
+                                title="点击设置流量上限">
+                                <div class="np-readout-label">总流量 <span id="showMax" class="np-mono"></span></div>
+                                <div class="np-readout-value np-mono" id="total">-</div>
+                                <div class="np-readout-note">点击设置流量上限</div>
+                            </div>
+                            <div class="np-readout">
+                                <div class="np-readout-label" id="describe">实时速度</div>
+                                <div class="np-readout-value np-mono np-value-accent" id="speed">-</div>
+                                <div class="np-readout-note">瞬时值，停止后为平均值</div>
+                            </div>
+                            <div class="np-readout">
+                                <div class="np-readout-label">带宽</div>
+                                <div class="np-readout-value np-mono" id="mbps">-</div>
+                                <div class="np-readout-note">按下载速率换算</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="np-block np-block-chart np-block-grow">
+                        <div class="np-panel-head">
+                            <div class="np-panel-head-left">
+                                <span class="np-index">03</span>
+                                <h2>速率与延迟</h2>
+                            </div>
+                            <span class="np-meta np-head-unit">速率 MB/s · 延迟 ms · 每秒采样</span>
+                            <div class="np-legend">
+                                <span class="np-legend-item"><i class="np-swatch np-swatch-accent"></i>速率</span>
+                                <span class="np-legend-item"><i class="np-swatch np-swatch-neutral"></i>延迟</span>
+                            </div>
+                        </div>
+                        <div id="dv" class="np-chart"></div>
+                    </section>
                 </div>
             </div>
-            <!-- content @d -->
-            <div class="nk-footer nk-footer-fluid bg-lighter">
-                <div class="container-xl">
-                    <div class="nk-footer-wrap">
-                        <div class="nk-footer-copyright">©2023 <a href="http://jvze.me">📧：jvze@pm.me</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- footer @e -->
         </div>
-        <!-- wrap @e -->
-        <audio controls id="music" loop="loop" style="display:none">
-            <source src="res/background.mp3" type="audio/mpeg">
-        </audio>
-        <script>
-            // 禁用双击放大(防止按加减按钮误触)
-            var lastTouchEnd = 0
-            if (!!('ontouchstart' in window || navigator.maxTouchPoints)) {
-                document.documentElement.addEventListener(
-                    'touchend',
-                    function (event) {
-                        var now = Date.now()
-                        if (now - lastTouchEnd <= 300) {
-                            event.preventDefault()
-                        }
-                        lastTouchEnd = now
-                    }, {
+
+        <footer class="np-footer">
+            <p id='hitokoto' class="np-hitokoto"></p>
+            <div class="np-footer-links">
+                <a href="http://jvze.me" class="np-textlink">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M6 4h12v16l-6-4-6 4V4Z" />
+                    </svg>
+                    收藏本页
+                </a>
+                <span class="np-footer-copy">© 2023 JVZ · jvze@pm.me</span>
+            </div>
+        </footer>
+    </main>
+
+    <audio controls id="music" loop="loop" style="display:none">
+        <source src="res/background.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 禁用双击放大(防止按加减按钮误触)
+        var lastTouchEnd = 0
+        if (!!('ontouchstart' in window || navigator.maxTouchPoints)) {
+            document.documentElement.addEventListener(
+                'touchend',
+                function (event) {
+                    var now = Date.now()
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault()
+                    }
+                    lastTouchEnd = now
+                }, {
                     passive: false
                 }
-                )
+            )
+        }
+
+        function show(num, des, flo) {
+            var cnum = num;
+            var total_index = 0;
+            while (cnum >= 1024) {
+                if (total_index == des.length - 1) break;
+                cnum = cnum / 1024;
+                total_index++;
             }
+            return cnum.toFixed(flo[total_index]) + des[total_index];
+        }
 
-            function show(num, des, flo) {
-                var cnum = num;
-                var total_index = 0;
-                while (cnum >= 1024) {
-                    if (total_index == des.length - 1) break;
-                    cnum = cnum / 1024;
-                    total_index++;
-                }
-                return cnum.toFixed(flo[total_index]) + des[total_index];
+        function musiccontrol(botton) {
+            if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+                if (document.getElementById("customSwitch2").checked) document.getElementById("music").play()
+                else document.getElementById("music").pause()
             }
+        }
 
+        document.getElementById("music").addEventListener("pause", function () {
+            document.title = 'JVZ-网络面板'
+            if (run && !visibl) botton_clicked()
+            document.getElementById("customSwitch2").checked = false
+        })
+        document.getElementById("music").addEventListener("play", function () {
+            if (!(run || visibl)) botton_clicked()
+            document.getElementById("customSwitch2").checked = true
+        })
 
-            function musiccontrol(botton) {
-                if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
-                    if (document.getElementById("customSwitch2").checked) document.getElementById("music").play()
-                    else document.getElementById("music").pause()
-                }
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i].trim();
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
             }
+            return "";
+        }
+        document.getElementById('diy').value = getCookie("diy");
+        if (getCookie("select")) document.getElementById('select').selectedIndex = getCookie("select");
+        var selector = document.getElementById("select");
+        document.getElementById('link').value = selector.options[selector.selectedIndex].value;
 
-            document.getElementById("music").addEventListener("pause", function () {
-                document.title = 'JVZ-网络面板'
-                if (run && !visibl) botton_clicked()
-                document.getElementById("customSwitch2").checked = false
-            })
-            document.getElementById("music").addEventListener("play", function () {
-                if (!(run || visibl)) botton_clicked()
-                document.getElementById("customSwitch2").checked = true
-            })
+        var Maximum = 0
+        setMax(getCookie('Max'))
 
-            function setCookie(cname, cvalue, exdays) {
-                var d = new Date();
-                d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-                var expires = "expires=" + d.toGMTString();
-                document.cookie = cname + "=" + cvalue + "; " + expires;
+        function setMax(inputMax) {
+            if (inputMax > 0) {
+                setCookie("Max", inputMax, 365)
+                Maximum = inputMax * 1073741824
+                document.getElementById("showMax").innerText = '/' + show(Maximum, ['B', 'KB', 'MB', 'GB', 'TB', 'PB'], [0, 0, 1, 2, 2, 2])
+            } else {
+                Maximum = 0
+                document.getElementById("showMax").innerText = ''
+                setCookie("Max", 0, 365)
             }
-
-            function getCookie(cname) {
-                var name = cname + "=";
-                var ca = document.cookie.split(';');
-                for (var i = 0; i < ca.length; i++) {
-                    var c = ca[i].trim();
-                    if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
-                }
-                return "";
+        }
+    </script>
+    <script>
+        document.onkeydown = function () {
+            if (window.event && window.event.keyCode == 123) {
+                alert("F12被禁用");
+                event.keyCode = 0;
+                event.returnValue = false;
             }
-            document.getElementById('diy').value = getCookie("diy");
-            if (getCookie("select")) document.getElementById('select').selectedIndex = getCookie("select");
-            var selector = document.getElementById("select");
-            document.getElementById('link').value = selector.options[selector.selectedIndex].value;
-
-
-            var Maximum = 0
-            setMax(getCookie('Max'))
-
-            function setMax(inputMax) {
-                if (inputMax > 0) {
-                    setCookie("Max", inputMax, 365)
-                    Maximum = inputMax * 1073741824
-                    document.getElementById("showMax").innerText = '/' + show(Maximum, ['B', 'KB', 'MB', 'GB', 'TB', 'PB'], [0, 0, 1, 2, 2, 2])
-                } else {
-                    Maximum = 0
-                    document.getElementById("showMax").innerText = ''
-                    setCookie("Max", 0, 365)
-                }
+            if (window.event && window.event.keyCode == 13) {
+                window.event.keyCode = 505;
             }
-        </script>
-        <script>
-            var plugin_id = 5;
-            var plugin_is_star = 0;
-            $("#star-btn-text").text(plugin_is_star ? '取消收藏' : '添加收藏');
-            $(document).ready(function () {
-                $('.dark-switch').on("click", function (e) {
-                    if ($("body.dark-mode").length <= 0) {
-                        document.cookie = 'darkmode=1';
-                    } else {
-                        document.cookie = 'darkmode=0';
-                    }
+            if (window.event && window.event.keyCode == 8) {
+                alert("请使用Del键进行字符的删除操作！");
+                window.event.returnValue = false;
+            }
+        }
+    </script>
+    <script src='main.js?5'></script>
+    <script>
+        // 图表高度由分区撑开；窄屏收紧轴标签并收起导出按钮
+        (function () {
+            var box = document.getElementById('dv');
+            if (!box) return;
+            var apply = function () {
+                if (!window.myChart) return;
+                var narrow = box.clientWidth < 420;
+                window.myChart.setOption({
+                    toolbox: { show: !narrow },
+                    grid: narrow
+                        ? { left: 4, right: 4, top: 12, bottom: 4, containLabel: true }
+                        : { left: 8, right: 16, top: 24, bottom: 8, containLabel: true },
+                    xAxis: [{ axisLabel: { fontSize: narrow ? 10 : 11 } }],
+                    yAxis: [
+                        { axisLabel: { fontSize: narrow ? 10 : 11 } },
+                        { axisLabel: { fontSize: narrow ? 10 : 11 } }
+                    ]
                 });
-            })
-        </script>
-        <script>document.onkeydown = function () {
-                if (window.event && window.event.keyCode == 123) {
-                    alert("F12被禁用");
-                    event.keyCode = 0;
-                    event.returnValue = false;
-                }
-                if (window.event && window.event.keyCode == 13) {
-                    window.event.keyCode = 505;
-                }
-                if (window.event && window.event.keyCode == 8) {
-                    alert(str + "\n请使用Del键进行字符的删除操作！");
-                    window.event.returnValue = false;
-                }
-            }
-        </script>
-        <script src='main.js?5'></script>
+                window.myChart.resize();
+            };
+            if (window.ResizeObserver) new ResizeObserver(apply).observe(box);
+            window.addEventListener('resize', apply);
+            apply();
+        })();
+    </script>
 </body>
 
 </html>
