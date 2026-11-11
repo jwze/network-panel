@@ -30,7 +30,7 @@ export function initUI() {
   }
 
   music.addEventListener('pause', () => {
-    document.title = 'JVZ-网络面板'
+    document.title = '网络面板'
     if (state.run && !state.visibl) bottonClicked()
     sw.checked = false
   })
