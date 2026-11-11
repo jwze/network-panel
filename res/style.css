@@ -97,11 +97,13 @@ body.is-running .np-state-run { display: inline; }
 .np-board-grid {
     display: grid;
     grid-template-columns: 360px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
     min-height: calc(100vh - 152px);
 }
 .np-col { display: flex; flex-direction: column; min-width: 0; }
 .np-col + .np-col { border-left: 1px solid var(--line); }
-.np-col-side .np-block:last-child { flex: 1; }
+/* 侧栏只剩一个分区时不拉伸，避免把内容框成一个空荡荡的高块 */
+.np-col-side .np-block:last-child:not(:only-child) { flex: 1; }
 .np-block { padding: 20px; }
 .np-block + .np-block { border-top: 1px solid var(--line); }
 .np-block-grow { flex: 1; min-height: 0; }
@@ -202,28 +204,27 @@ body.is-running .np-state-run { display: inline; }
 .np-primary:active { transform: scale(.985); }
 .np-primary:disabled { opacity: .55; cursor: default; transform: none; }
 
-/* 出口地址：两行紧凑表格 */
-.np-egress-row {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line);
+/* 出口地址：通栏三列表格，IPv4 / IPv6 / 归属地及运营商各自成列，取不到的留空 */
+.np-block-egress { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+.np-egress-table { display: grid; }
+.np-egress-head, .np-egress-row {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr) 64px;
+    column-gap: 16px; align-items: start;
 }
+.np-egress-head {
+    padding-bottom: 8px; border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+}
+.np-egress-head-lat { text-align: right; }
+.np-egress-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
 .np-egress-row:last-child { border-bottom: 0; padding-bottom: 0; }
-.np-egress-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.np-egress-ip { font-family: var(--mono); font-size: 12px; line-height: 18px; overflow-wrap: anywhere; }
+.np-egress-label { padding-top: 2px; font-size: 12px; color: var(--ink-2); }
+.np-egress-cell { font-size: 12px; line-height: 18px; min-width: 0; overflow-wrap: anywhere; }
 .np-egress-lat {
-    min-width: 56px; text-align: right; white-space: nowrap;
+    text-align: right; white-space: nowrap;
     font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums;
 }
-
-/* 访问信息：本地渲染的四行等宽读数 */
-.np-visit-info {
-    display: grid; grid-template-columns: 68px minmax(0, 1fr);
-    row-gap: 6px; column-gap: 12px;
-    font-family: var(--mono); font-size: 12px;
-}
-.np-visit-k { color: var(--ink-3); font-size: 11px; }
-.np-visit-v { color: var(--ink); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.np-visit img { display: block; max-width: 100%; height: auto; margin-top: 12px; border-radius: 4px; }
 
 /* 实时读数：一行三段，只有中间带色 */
 .np-readout-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -287,7 +288,6 @@ body.is-running .np-state-run { display: inline; }
     .np-block-stats { order: 2; }
     .np-block-chart { order: 3; }
     .np-block-egress { order: 4; }
-    .np-block-visit { order: 5; }
     .np-chart { flex: none; height: 320px; }
 }
 
@@ -326,8 +326,17 @@ body.is-running .np-state-run { display: inline; }
     .np-legend { gap: 10px; }
     .np-chart { height: 240px; min-height: 0; }
 
+    /* 窄屏：三列改为带列名的纵向读数，避免长 IPv6 撑破宽度 */
+    .np-egress-head { display: none; }
+    .np-egress-row { grid-template-columns: minmax(0, 1fr); row-gap: 4px; padding: 12px 0; }
+    .np-egress-label { padding-top: 0; font-weight: 600; color: var(--ink); }
+    .np-egress-cell::before {
+        content: attr(data-label); display: inline-block; width: 96px;
+        font-family: var(--sans); font-size: 11px; color: var(--ink-3);
+    }
+    .np-egress-lat { text-align: left; }
+
     .np-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .np-visit-info { grid-template-columns: 68px minmax(0, 1fr); }
 }
 
 @media (max-width: 360px) {

@@ -10,7 +10,6 @@
     <meta http-equiv="Cache-Control" content="no-store" />
     <link rel="stylesheet" href="./res/style.css">
     <link rel="icon" href="https://q.qlogo.cn/headimg_dl?dst_uin=5754195&spec=640" type="image/png">
-    <script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
     <script>
         var _hmt = _hmt || [];
         (function () {
@@ -68,9 +67,7 @@
                         <div class="np-field">
                             <label class="np-label" for="select">测试地址</label>
                             <div class="np-select-wrap">
-                                <select id='select'
-                                    onchange="document.getElementById('link').value=this.options[this.selectedIndex].value;setCookie('select',this.selectedIndex,365);"
-                                    type="text" class="np-select">
+                                <select id='select' class="np-select">
                                         <option value="" id="diy">自定义</option>
                                         <option selected="selected"
                                             value="https://issuecdn.baidupcs.com/issue/netdisk/apk/BaiduNetdiskSetup_wap_share.apk">
@@ -221,28 +218,21 @@
 
                         <div class="np-field">
                             <label class="np-label" for="link">自定义链接</label>
-                            <input value=""
-                                oninput="document.getElementById('select').selectedIndex=0;document.getElementById('diy').value=this.value;setCookie('diy',this.value,365);setCookie('select',0,365);"
-                                type="text" id="link" placeholder="自定义下载链接" autocomplete="off" class="np-input">
+                            <input value="" type="text" id="link" placeholder="自定义下载链接" autocomplete="off" class="np-input">
                         </div>
 
                         <div class="np-field np-field-row">
                             <div class="np-field-col">
                                 <label class="np-label" for="thread">线程 <span class="np-meta">1–32</span></label>
                                 <div class="np-stepper">
-                                    <button type="button"
-                                        onclick="var thread=document.getElementById('thread');if(thread.value!=thread.min)thread.value--;"
-                                        class="np-step" aria-label="减少线程">
+                                    <button type="button" class="np-step" aria-label="减少线程">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                                             <path d="M5 12h14" />
                                         </svg>
                                     </button>
-                                    <input onchange="var self= document.getElementById('thread');if(self.value<self.min)self.value=self.min;if(self.value>self.max)self.value=self.max"
-                                        id='thread' type="number" min="1" max="32" value=1 class="np-stepper-input">
-                                    <button type="button"
-                                        onclick="var thread=document.getElementById('thread');if(thread.value!=thread.max)thread.value++;"
-                                        class="np-step" aria-label="增加线程">
+                                    <input id='thread' type="number" min="1" max="32" value=1 class="np-stepper-input">
+                                    <button type="button" class="np-step" aria-label="增加线程">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                                             <path d="M12 5v14M5 12h14" />
@@ -253,47 +243,16 @@
                             <div class="np-field-col" id="back">
                                 <span class="np-label">后台</span>
                                 <label class="np-switch" for="customSwitch2">
-                                    <input onclick="musiccontrol(this)" type="checkbox" id="customSwitch2"
-                                        class="np-switch-input">
+                                    <input type="checkbox" id="customSwitch2" class="np-switch-input">
                                     <span class="np-switch-track" aria-hidden="true"><span class="np-switch-thumb"></span></span>
                                     <span class="np-switch-label">保持后台运行</span>
                                 </label>
                             </div>
                         </div>
 
-                        <button onclick="botton_clicked();" type="button" id="do" class="np-primary">开始</button>
+                        <button type="button" id="do" class="np-primary">开始</button>
                     </section>
 
-                    <section class="np-block np-block-egress">
-                        <div class="np-panel-head">
-                            <span class="np-index">04</span>
-                            <h2>出口地址</h2>
-                        </div>
-                        <div class="np-egress-row">
-                            <div class="np-egress-main">
-                                <span class="np-meta">国内出口</span>
-                                <span id="ipcn" class="np-egress-ip">Loading...</span>
-                            </div>
-                            <span id="laycn" class="np-egress-lat np-mono">-ms</span>
-                        </div>
-                        <div class="np-egress-row">
-                            <div class="np-egress-main">
-                                <span class="np-meta">国际出口</span>
-                                <span id="ipgb" class="np-egress-ip">Loading...</span>
-                            </div>
-                            <span id="laygb" class="np-egress-lat np-mono">-ms</span>
-                        </div>
-                    </section>
-
-                    <section class="np-block np-block-visit">
-                        <div class="np-panel-head">
-                            <span class="np-index">05</span>
-                            <h2>访问信息</h2>
-                        </div>
-                        <script>if (typeof ipinfo === 'function') ipinfo()</script>
-                        <div id="visitInfo" class="np-visit-info"></div>
-                        <img src="http://jvze.me" onError="this.src='https://tool.lu/netcard/'">
-                    </section>
                 </div>
 
                 <div class="np-col np-col-main">
@@ -305,7 +264,6 @@
                         </div>
                         <div class="np-readout-row">
                             <div class="np-readout np-readout-clickable"
-                                onclick='inputMax=prompt("请输入流量上限(GB)\n不填为不设置上限","");if(inputMax !== null)setMax(inputMax)'
                                 title="点击设置流量上限">
                                 <div class="np-readout-label">总流量 <span id="showMax" class="np-mono"></span></div>
                                 <div class="np-readout-value np-mono" id="total">-</div>
@@ -339,6 +297,36 @@
                         <div id="dv" class="np-chart"></div>
                     </section>
                 </div>
+
+                <section class="np-block np-block-egress">
+                    <div class="np-panel-head">
+                        <span class="np-index">04</span>
+                        <h2>出口地址</h2>
+                    </div>
+                    <div class="np-egress-table">
+                        <div class="np-egress-head">
+                            <span></span>
+                            <span>IPv4</span>
+                            <span>IPv6</span>
+                            <span>归属地及运营商</span>
+                            <span class="np-egress-head-lat">延迟</span>
+                        </div>
+                        <div class="np-egress-row" id="ipcn">
+                            <span class="np-egress-label np-meta">国内出口</span>
+                            <span class="np-egress-cell np-mono" id="ipcn4" data-label="IPv4"></span>
+                            <span class="np-egress-cell np-mono" id="ipcn6" data-label="IPv6"></span>
+                            <span class="np-egress-cell" id="ipcnRegion" data-label="归属地 / 运营商"></span>
+                            <span id="laycn" class="np-egress-lat np-mono">-ms</span>
+                        </div>
+                        <div class="np-egress-row" id="ipgb">
+                            <span class="np-egress-label np-meta">国际出口</span>
+                            <span class="np-egress-cell np-mono" id="ipgb4" data-label="IPv4"></span>
+                            <span class="np-egress-cell np-mono" id="ipgb6" data-label="IPv6"></span>
+                            <span class="np-egress-cell" id="ipgbRegion" data-label="归属地 / 运营商"></span>
+                            <span id="laygb" class="np-egress-lat np-mono">-ms</span>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
 
@@ -361,131 +349,7 @@
         <source src="res/background.mp3" type="audio/mpeg">
     </audio>
 
-    <script>
-        // 禁用双击放大(防止按加减按钮误触)
-        var lastTouchEnd = 0
-        if (!!('ontouchstart' in window || navigator.maxTouchPoints)) {
-            document.documentElement.addEventListener(
-                'touchend',
-                function (event) {
-                    var now = Date.now()
-                    if (now - lastTouchEnd <= 300) {
-                        event.preventDefault()
-                    }
-                    lastTouchEnd = now
-                }, {
-                    passive: false
-                }
-            )
-        }
-
-        function show(num, des, flo) {
-            var cnum = num;
-            var total_index = 0;
-            while (cnum >= 1024) {
-                if (total_index == des.length - 1) break;
-                cnum = cnum / 1024;
-                total_index++;
-            }
-            return cnum.toFixed(flo[total_index]) + des[total_index];
-        }
-
-        function musiccontrol(botton) {
-            if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
-                if (document.getElementById("customSwitch2").checked) document.getElementById("music").play()
-                else document.getElementById("music").pause()
-            }
-        }
-
-        document.getElementById("music").addEventListener("pause", function () {
-            document.title = 'JVZ-网络面板'
-            if (run && !visibl) botton_clicked()
-            document.getElementById("customSwitch2").checked = false
-        })
-        document.getElementById("music").addEventListener("play", function () {
-            if (!(run || visibl)) botton_clicked()
-            document.getElementById("customSwitch2").checked = true
-        })
-
-        function setCookie(cname, cvalue, exdays) {
-            var d = new Date();
-            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-            var expires = "expires=" + d.toGMTString();
-            document.cookie = cname + "=" + cvalue + "; " + expires;
-        }
-
-        function getCookie(cname) {
-            var name = cname + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i].trim();
-                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
-            }
-            return "";
-        }
-        document.getElementById('diy').value = getCookie("diy");
-        if (getCookie("select")) document.getElementById('select').selectedIndex = getCookie("select");
-        var selector = document.getElementById("select");
-        document.getElementById('link').value = selector.options[selector.selectedIndex].value;
-
-        var Maximum = 0
-        setMax(getCookie('Max'))
-
-        function setMax(inputMax) {
-            if (inputMax > 0) {
-                setCookie("Max", inputMax, 365)
-                Maximum = inputMax * 1073741824
-                document.getElementById("showMax").innerText = '/' + show(Maximum, ['B', 'KB', 'MB', 'GB', 'TB', 'PB'], [0, 0, 1, 2, 2, 2])
-            } else {
-                Maximum = 0
-                document.getElementById("showMax").innerText = ''
-                setCookie("Max", 0, 365)
-            }
-        }
-    </script>
-    <script>
-        document.onkeydown = function () {
-            if (window.event && window.event.keyCode == 123) {
-                alert("F12被禁用");
-                event.keyCode = 0;
-                event.returnValue = false;
-            }
-            if (window.event && window.event.keyCode == 13) {
-                window.event.keyCode = 505;
-            }
-            if (window.event && window.event.keyCode == 8) {
-                alert("请使用Del键进行字符的删除操作！");
-                window.event.returnValue = false;
-            }
-        }
-    </script>
-    <script src='main.js?5'></script>
-    <script>
-        // 图表高度由分区撑开；窄屏收紧轴标签并收起导出按钮
-        (function () {
-            var box = document.getElementById('dv');
-            if (!box) return;
-            var apply = function () {
-                if (!window.myChart) return;
-                var narrow = box.clientWidth < 420;
-                window.myChart.setOption({
-                    toolbox: { show: !narrow },
-                    grid: narrow
-                        ? { left: 4, right: 4, top: 12, bottom: 4, containLabel: true }
-                        : { left: 8, right: 16, top: 24, bottom: 8, containLabel: true },
-                    xAxis: [{ axisLabel: { fontSize: narrow ? 10 : 11 } }],
-                    yAxis: [
-                        { axisLabel: { fontSize: narrow ? 10 : 11 } },
-                        { axisLabel: { fontSize: narrow ? 10 : 11 } }
-                    ]
-                });
-                window.myChart.resize();
-            };
-            if (window.ResizeObserver) new ResizeObserver(apply).observe(box);
-            window.addEventListener('resize', apply);
-            apply();
-        })();
-    </script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
