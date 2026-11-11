@@ -28,8 +28,14 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 
+/* 整页就是一块仪表板：撑满视口，富余的高度全部交给图表。
+   不用 100vh - 152 这类写死的算式去猜，换一个比例就猜错。 */
 body {
     margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
     background: var(--bg);
     color: var(--ink);
     font: 400 14px/1.5 var(--sans);
@@ -53,10 +59,10 @@ svg { flex: none; }
 .np-meta { font-size: 11px; font-weight: 400; color: var(--ink-3); }
 
 /* 容器铺满桌面，只留 24px 页边 */
-.np-shell { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+.np-shell { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 24px; }
 
 /* 顶栏 */
-.np-topbar { height: 48px; background: var(--topbar); border-bottom: 1px solid var(--line-strong); }
+.np-topbar { flex: none; height: 48px; background: var(--topbar); border-bottom: 1px solid var(--line-strong); }
 .np-topbar-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .np-brand { display: inline-flex; align-items: center; gap: 8px; }
 .np-mark {
@@ -67,25 +73,22 @@ svg { flex: none; }
 .np-brand-name { font-size: 14px; font-weight: 500; }
 
 /* 一块整体的记录板，取代三张独立卡片 */
-.np-main { padding-top: 20px; }
+.np-main { flex: 1; display: flex; flex-direction: column; padding-top: 20px; }
 .np-board {
+    flex: 1;
+    display: flex; flex-direction: column;
     background: var(--panel);
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-board);
     overflow: hidden;
 }
-.np-board-grid {
-    display: grid;
-    grid-template-columns: 360px minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) auto;
-    min-height: calc(100vh - 152px);
-}
-.np-col { display: flex; flex-direction: column; min-width: 0; }
-.np-col + .np-col { border-left: 1px solid var(--line); }
-/* 侧栏只剩一个分区时不拉伸，避免把内容框成一个空荡荡的高块 */
-.np-col-side .np-block:last-child:not(:only-child) { flex: 1; }
-.np-block { padding: 20px; }
-.np-block + .np-block { border-top: 1px solid var(--line); }
+/* 四条通栏仪表带，从上到下按 01 → 04 读；
+   图表带吃掉视口剩下的高度，任何高度都不会再留出空栏 */
+.np-board-grid { flex: 1; display: flex; flex-direction: column; }
+/* 分栏容器在通栏排法里退出布局，四个分区按 DOM 顺序排成一条竖带 */
+.np-col { display: contents; }
+.np-block { padding: 20px 24px; border-top: 1px solid var(--line); }
+.np-block-setup { border-top: 0; }
 .np-block-grow { flex: 1; min-height: 0; }
 
 /* 分区头：通道编号是这版的签名细节 */
@@ -104,8 +107,20 @@ svg { flex: none; }
     content: ""; width: 3px; height: 12px;
     background: var(--line-strong); border-radius: 1px;
 }
-.np-head-meta { margin-left: auto; }
 .np-head-unit { margin-left: 16px; }
+
+/* 01 摊平成一条设置带：四格字段 + 右端主按钮，
+   输入类字段吸收多余宽度，线程与开关收到固定宽度，中间不留空档 */
+.np-block-setup {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) minmax(240px, 1.35fr) 120px auto 120px;
+    column-gap: 16px; align-items: end;
+}
+.np-block-setup > .np-panel-head { grid-column: 1 / -1; }
+.np-block-setup .np-field { margin-bottom: 0; }
+/* 线程与后台原来是并排的两小格，摊平后直接各占设置带的一列 */
+.np-block-setup .np-field-row { display: contents; }
+.np-block-setup .np-primary { width: 100%; height: 36px; }
 
 /* 表单：控件 36px，字段间距 12 */
 .np-field { margin-bottom: 12px; }
@@ -171,7 +186,6 @@ svg { flex: none; }
 .np-switch-input:checked + .np-switch-track { background: var(--accent); }
 .np-switch-input:checked + .np-switch-track .np-switch-thumb { transform: translateX(14px); }
 .np-switch-input:focus-visible + .np-switch-track { outline: 2px solid var(--accent); outline-offset: 2px; }
-.np-switch-label { font-size: 12px; color: var(--ink-2); white-space: nowrap; }
 
 .np-primary {
     width: 100%; height: 40px;
@@ -184,20 +198,20 @@ svg { flex: none; }
 .np-primary:active { transform: scale(.985); }
 .np-primary:disabled { opacity: .55; cursor: default; transform: none; }
 
-/* 出口地址：通栏三列表格，IPv4 / IPv6 / 归属地及运营商各自成列，取不到的留空 */
-.np-block-egress { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+/* 出口地址：通栏铭牌表，IPv4 / IPv6 / 归属地及运营商各自成列，取不到的留空 */
+.np-block-egress { border-top: 1px solid var(--line); }
 .np-egress-table { display: grid; }
 .np-egress-head, .np-egress-row {
     display: grid;
-    grid-template-columns: 96px minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr) 64px;
-    column-gap: 16px; align-items: start;
+    grid-template-columns: 104px minmax(0, .8fr) minmax(0, 1.5fr) minmax(0, 1fr) 80px;
+    column-gap: 24px; align-items: start;
 }
 .np-egress-head {
     padding-bottom: 8px; border-bottom: 1px solid var(--line);
     font-family: var(--mono); font-size: 11px; color: var(--ink-3);
 }
 .np-egress-head-lat { text-align: right; }
-.np-egress-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.np-egress-row { padding: 12px 0; border-bottom: 1px solid var(--line); }
 .np-egress-row:last-child { border-bottom: 0; padding-bottom: 0; }
 .np-egress-label { padding-top: 2px; font-size: 12px; color: var(--ink-2); }
 .np-egress-cell { font-size: 12px; line-height: 18px; min-width: 0; overflow-wrap: anywhere; }
@@ -206,40 +220,45 @@ svg { flex: none; }
     font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums;
 }
 
-/* 实时读数：一行三段，只有中间带色 */
+/* 实时读数：通栏三段，标签在上、读数在下、说明垫底，三段共用一条基线 */
 .np-readout-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .np-readout {
-    min-width: 0; padding: 0 20px;
-    display: grid; grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: auto auto; align-items: center; column-gap: 12px;
+    min-width: 0; padding: 0 24px;
+    display: flex; flex-direction: column; gap: 2px;
 }
 .np-readout:first-child { padding-left: 0; }
 .np-readout:last-child { padding-right: 0; }
 .np-readout + .np-readout { border-left: 1px solid var(--line); }
-.np-readout-label { grid-column: 1; grid-row: 1; font-size: 12px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
+.np-readout-label { font-size: 12px; font-weight: 500; color: var(--ink-2); white-space: nowrap; min-width: 0; }
 .np-readout-label .np-mono { font-size: 11px; font-weight: 400; color: var(--ink-3); }
+/* 读数随列宽收放：1024 GB / 1024.0 MB/s 这种最长位数在窄列里也不会顶到相邻一段 */
 .np-readout-value {
-    grid-column: 2; grid-row: 1 / 3;
-    margin-top: 0; font-size: 30px; line-height: 1.1; font-weight: 500;
+    font-size: clamp(22px, 1.3vw + 11px, 32px);
+    line-height: 1.1; font-weight: 500;
     color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums;
 }
 .np-value-accent { color: var(--accent); }
-.np-readout-note { grid-column: 1; grid-row: 2; margin-top: 2px; font-size: 11px; color: var(--ink-3); white-space: nowrap; }
-.np-readout-clickable { cursor: pointer; border-radius: var(--radius-control); transition: background-color .16s var(--ease); }
-.np-readout-clickable:hover, .np-readout-clickable:active { background: var(--raised-hover); }
+.np-readout-note { font-size: 11px; color: var(--ink-3); white-space: nowrap; }
+/* 可点击的读数改用说明行变色提示，整块不回底色 */
+.np-readout-clickable { cursor: pointer; }
+.np-readout-clickable:hover .np-readout-note { color: var(--accent); }
 
-/* 图表：吃掉剩余高度，是屏幕里唯一带形状与颜色的时刻 */
-.np-block-chart { display: flex; flex-direction: column; }
+/* 图表：吃掉剩余高度，是屏幕里唯一带形状与颜色的时刻。
+   画布绝对定位在画框里，ECharts 自报的像素高度不会反过来把布局顶大 ——
+   否则容器高度与画布高度互相咬住，换一个比例就卡在旧尺寸上 */
+.np-block-chart { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
 .np-block-chart .np-panel-head { margin-bottom: 8px; }
+.np-chart { position: relative; width: 100%; flex: 1; min-height: 220px; }
+.np-chart > div { position: absolute; inset: 0; }
 .np-legend { display: flex; align-items: center; gap: 16px; margin-left: auto; font-size: 11px; color: var(--ink-3); }
 .np-legend-item { display: inline-flex; align-items: center; gap: 6px; }
 .np-swatch { width: 12px; height: 2px; border-radius: 1px; display: inline-block; }
 .np-swatch-accent { background: var(--accent); }
 .np-swatch-neutral { background: var(--quiet); }
-.np-chart { width: 100%; flex: 1; min-height: 260px; }
 
 /* 页脚 */
 .np-footer {
+    flex: none;
     padding: 16px 0 24px;
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
@@ -258,19 +277,53 @@ svg { flex: none; }
 .np-main { animation: np-enter .32s var(--ease) both; }
 @media (prefers-reduced-motion: reduce) { .np-main { animation: none; } }
 
-/* 中等屏：两栏折成阅读顺序的单列，分区重新编号顺序 */
-@media (max-width: 1000px) {
-    .np-board-grid { display: flex; flex-direction: column; min-height: 0; }
-    .np-col { display: contents; }
-    .np-col + .np-col { border-left: 0; }
-    .np-block { border-top: 1px solid var(--line); flex: none; }
-    .np-block-setup { border-top: 0; order: 1; }
-    .np-block-stats { order: 2; }
-    .np-block-chart { order: 3; }
-    .np-block-egress { order: 4; }
-    .np-chart { flex: none; height: 320px; }
+/* ===========================================================
+   比例适配
+   桌面通栏（01→04 四条带）只在高度够的时候成立；
+   高度不够时不是把四条带压扁，而是换一种排法。
+   =========================================================== */
+
+/* 矮视口：收紧留白与读数，让控制轨与手机版面在 720～800 的高度上不挤 */
+@media (max-height: 800px) {
+    .np-block { padding: 16px 20px; }
+    .np-panel-head { margin-bottom: 12px; }
+    .np-block-chart .np-panel-head { margin-bottom: 6px; }
+    .np-readout-value { font-size: clamp(22px, 1.2vw + 8px, 28px); }
+    .np-egress-row { padding: 10px 0; }
+    .np-footer { padding: 12px 0 16px; }
+    .np-chart { min-height: 180px; }
 }
 
+/* 中窄屏：设置带折成两行，字段各占三格，按钮与线程同排 */
+@media (max-width: 940px) {
+    .np-block-setup { grid-template-columns: repeat(6, minmax(0, 1fr)); row-gap: 14px; }
+    .np-block-setup > .np-field { grid-column: span 3; }
+    .np-block-setup .np-field-col { grid-column: span 2; }
+    .np-block-setup .np-primary { grid-column: span 2; width: auto; }
+}
+
+/* 出口地址在 900 以下换成两块并排的铭牌：
+   IPv6 单条就要 280px，横排到 900 已经从中间断行，比换排法更难看 */
+@media (max-width: 900px) {
+    .np-egress-head { display: none; }
+    .np-egress-table { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+    .np-egress-row {
+        grid-template-columns: minmax(0, 1fr); row-gap: 3px;
+        padding: 0; border-bottom: 0;
+    }
+    .np-egress-label {
+        padding: 0 0 6px; margin-bottom: 6px;
+        border-bottom: 1px solid var(--line);
+        font-weight: 500; color: var(--ink);
+    }
+    .np-egress-cell::before, .np-egress-lat::before {
+        content: attr(data-label); display: inline-block; width: 96px;
+        font-family: var(--sans); font-size: 11px; font-weight: 400; color: var(--ink-3);
+    }
+    .np-egress-lat { text-align: left; }
+}
+
+/* 手机竖屏：一列到底，页面按内容滚动，不硬撑视口 */
 @media (max-width: 640px) {
     .np-shell { padding: 0 16px; }
     .np-main { padding-top: 16px; }
@@ -282,19 +335,14 @@ svg { flex: none; }
     .np-step { width: 40px; }
     .np-chevron { top: 12px; }
 
-    /* 390 宽放得下双列，别把线程与后台拆成两行 */
-    .np-field-row { grid-template-columns: 140px minmax(0, 1fr); gap: 12px; align-items: end; }
-
-    /* 提示回到可点击的读数下方，分区头只留标题 */
-    .np-readout { padding: 0 10px; grid-template-columns: minmax(0, 1fr); align-items: start; }
-    .np-readout-value { grid-column: 1; grid-row: 2; justify-self: start; font-size: 22px; margin-top: 4px; }
-    .np-readout-label { font-size: 11px; }
-    .np-readout-note { display: none; }
-    .np-readout:first-child .np-readout-note {
-        display: block; grid-column: 1; grid-row: 3;
-        margin-top: 2px; font-size: 11px; line-height: 14px; white-space: normal;
+    .np-block-setup { grid-template-columns: minmax(0, 1fr); row-gap: 12px; }
+    .np-block-setup > .np-field,
+    .np-block-setup .np-field-col,
+    .np-block-setup .np-primary { grid-column: auto; }
+    .np-block-setup .np-field-row {
+        display: grid; margin-bottom: 0;
+        grid-template-columns: 140px minmax(0, 1fr); gap: 12px; align-items: end;
     }
-    .np-head-meta { display: none; }
 
     /* 图表头补回单位说明，占第二行；导出按钮由脚本在窄屏收起 */
     .np-block-chart .np-panel-head { flex-wrap: wrap; row-gap: 4px; }
@@ -303,23 +351,77 @@ svg { flex: none; }
         margin-left: 0; font-size: 11px;
     }
     .np-legend { gap: 10px; }
-    .np-chart { height: 240px; min-height: 0; }
+    .np-chart { min-height: 240px; }
 
-    /* 窄屏：三列改为带列名的纵向读数，避免长 IPv6 撑破宽度 */
-    .np-egress-head { display: none; }
-    .np-egress-row { grid-template-columns: minmax(0, 1fr); row-gap: 4px; padding: 12px 0; }
-    .np-egress-label { padding-top: 0; font-weight: 600; color: var(--ink); }
-    .np-egress-cell::before {
-        content: attr(data-label); display: inline-block; width: 96px;
-        font-family: var(--sans); font-size: 11px; color: var(--ink-3);
-    }
-    .np-egress-lat { text-align: left; }
+    .np-egress-table { grid-template-columns: minmax(0, 1fr); }
+    .np-egress-row + .np-egress-row { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+    .np-egress-label { border-bottom: 0; padding-bottom: 0; margin-bottom: 2px; }
 
     .np-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
 
 @media (max-width: 360px) {
-    .np-field-row { grid-template-columns: minmax(0, 1fr); }
+    .np-block-setup .np-field-row { grid-template-columns: minmax(0, 1fr); row-gap: 12px; }
     .np-brand-name { font-size: 13px; }
-    .np-readout { padding: 0 8px; }
+}
+
+/* 横屏矮视口（笔记本 / iPad 横屏 / 折叠屏展开 / 手机横屏）：
+   四条带压成一条竖带会把图表挤成细条，于是改排成左侧控制轨 + 右侧仪表。
+   01 独占左轨、按钮压到轨底，02 与 03 叠在右列，04 依旧通栏 */
+@media (min-width: 641px) and (max-height: 940px) {
+    .np-board-grid {
+        display: grid;
+        grid-template-columns: clamp(260px, 24vw, 336px) minmax(0, 1fr);
+        grid-template-rows: 1fr auto;
+    }
+    .np-col { display: flex; flex-direction: column; min-width: 0; }
+    .np-col-side { grid-column: 1; grid-row: 1; border-right: 1px solid var(--line); }
+    .np-col-main { grid-column: 2; grid-row: 1; }
+    .np-block-egress { grid-column: 1 / -1; grid-row: 2; }
+
+    /* 轨里的表单竖排；按钮被推到轨道底部，像一排机架的操作位 */
+    .np-block-setup {
+        flex: 1;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto auto 1fr;
+        row-gap: 12px; align-items: stretch;
+    }
+    .np-block-setup > .np-panel-head { grid-column: 1; margin-bottom: 4px; }
+    .np-block-setup .np-field,
+    .np-block-setup .np-field-col,
+    .np-block-setup .np-primary { grid-column: auto; }
+    .np-block-setup .np-field-row {
+        display: grid; margin-bottom: 0;
+        grid-template-columns: 124px minmax(0, 1fr); gap: 12px; align-items: end;
+    }
+    .np-block-setup .np-primary { width: 100%; align-self: end; }
+
+    .np-block-stats { flex: none; border-top: 0; }
+    .np-chart { min-height: 160px; }
+
+    /* 图表标题在窄列里只保留标题与图例 */
+    .np-head-unit { display: none; }
+}
+
+/* 手机竖屏 / 控制轨下的窄右列：三段读数在这个宽度里排不下最长的数值，
+   改成标签在左、数值在右的清单 */
+@media (max-width: 640px),
+       (min-width: 641px) and (max-width: 940px) and (max-height: 940px) {
+    .np-readout-row { grid-template-columns: minmax(0, 1fr); }
+    .np-readout {
+        display: grid; grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto; align-items: center;
+        column-gap: 12px; padding: 10px 0;
+    }
+    .np-readout + .np-readout { border-left: 0; border-top: 1px solid var(--line); }
+    .np-readout:first-child { padding-top: 0; }
+    .np-readout:last-child { padding-bottom: 0; }
+    .np-readout-label { grid-column: 1; grid-row: 1; font-size: 12px; }
+    .np-readout-value { grid-column: 2; grid-row: 1 / 3; font-size: 24px; }
+    .np-readout-note { grid-column: 1; grid-row: 2; margin-top: 2px; white-space: normal; }
+}
+
+/* 2K 以上：记录板可以再宽一点，别在大屏上缩成中间一条 */
+@media (min-width: 2000px) {
+    .np-shell { max-width: 1560px; }
 }

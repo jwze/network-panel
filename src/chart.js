@@ -100,7 +100,7 @@ export function initChart() {
       toolbox: { show: !narrow },
       grid: narrow
         ? { left: 4, right: 4, top: 12, bottom: 4, containLabel: true }
-        : { left: 8, right: 16, top: 24, bottom: 8, containLabel: true },
+        : { left: 8, right: 16, top: 32, bottom: 8, containLabel: true },
       xAxis: [{ axisLabel: { fontSize: narrow ? 10 : 11 } }],
       yAxis: [
         { axisLabel: { fontSize: narrow ? 10 : 11 } },

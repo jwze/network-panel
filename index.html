@@ -226,18 +226,17 @@
                                 </div>
                             </div>
                             <div class="np-field-col" id="back">
-                                <span class="np-label">后台</span>
+                                <span class="np-label">后台运行</span>
                                 <label class="np-switch" for="customSwitch2">
-                                    <input type="checkbox" id="customSwitch2" class="np-switch-input">
+                                    <input type="checkbox" id="customSwitch2" class="np-switch-input"
+                                        aria-label="保持后台运行">
                                     <span class="np-switch-track" aria-hidden="true"><span class="np-switch-thumb"></span></span>
-                                    <span class="np-switch-label">保持后台运行</span>
                                 </label>
                             </div>
                         </div>
 
                         <button type="button" id="do" class="np-primary">开始</button>
                     </section>
-
                 </div>
 
                 <div class="np-col np-col-main">
@@ -245,14 +244,13 @@
                         <div class="np-panel-head">
                             <span class="np-index">02</span>
                             <h2>实时读数</h2>
-                            <span class="np-meta np-head-meta">点击「总流量」可设置上限</span>
                         </div>
                         <div class="np-readout-row">
                             <div class="np-readout np-readout-clickable"
                                 title="点击设置流量上限">
                                 <div class="np-readout-label">总流量 <span id="showMax" class="np-mono"></span></div>
                                 <div class="np-readout-value np-mono" id="total">-</div>
-                                <div class="np-readout-note">点击设置流量上限</div>
+                                <div class="np-readout-note">点击设置上限</div>
                             </div>
                             <div class="np-readout">
                                 <div class="np-readout-label" id="describe">实时速度</div>
@@ -279,7 +277,7 @@
                                 <span class="np-legend-item"><i class="np-swatch np-swatch-neutral"></i>延迟</span>
                             </div>
                         </div>
-                        <div id="dv" class="np-chart"></div>
+                        <div class="np-chart"><div id="dv"></div></div>
                     </section>
                 </div>
 
@@ -301,14 +299,14 @@
                             <span class="np-egress-cell np-mono" id="ipcn4" data-label="IPv4"></span>
                             <span class="np-egress-cell np-mono" id="ipcn6" data-label="IPv6"></span>
                             <span class="np-egress-cell" id="ipcnRegion" data-label="归属地 / 运营商"></span>
-                            <span id="laycn" class="np-egress-lat np-mono">-ms</span>
+                            <span id="laycn" class="np-egress-lat np-mono" data-label="延迟">-ms</span>
                         </div>
                         <div class="np-egress-row" id="ipgb">
                             <span class="np-egress-label np-meta">国际出口</span>
                             <span class="np-egress-cell np-mono" id="ipgb4" data-label="IPv4"></span>
                             <span class="np-egress-cell np-mono" id="ipgb6" data-label="IPv6"></span>
                             <span class="np-egress-cell" id="ipgbRegion" data-label="归属地 / 运营商"></span>
-                            <span id="laygb" class="np-egress-lat np-mono">-ms</span>
+                            <span id="laygb" class="np-egress-lat np-mono" data-label="延迟">-ms</span>
                         </div>
                     </div>
                 </section>
