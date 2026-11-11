@@ -65,26 +65,6 @@ svg { flex: none; }
     background: var(--raised); color: var(--ink-2);
 }
 .np-brand-name { font-size: 14px; font-weight: 500; }
-.np-topbar-right { display: flex; align-items: center; gap: 20px; }
-.np-status {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 11px; color: var(--ink-3); font-family: var(--mono);
-}
-.np-dot {
-    width: 6px; height: 6px; border-radius: 1px; background: #a8b0ba;
-    transition: background-color .16s var(--ease);
-}
-.np-state-run { display: none; }
-body.is-running .np-dot { background: var(--accent); }
-body.is-running .np-status-text { color: var(--accent); }
-body.is-running .np-state-idle { display: none; }
-body.is-running .np-state-run { display: inline; }
-.np-navlink {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 12px; color: var(--ink-2); transition: color .16s var(--ease);
-}
-.np-navlink svg { color: var(--ink-3); }
-.np-navlink:hover { color: var(--ink); }
 
 /* 一块整体的记录板，取代三张独立卡片 */
 .np-main { padding-top: 20px; }
@@ -295,7 +275,6 @@ body.is-running .np-state-run { display: inline; }
     .np-shell { padding: 0 16px; }
     .np-main { padding-top: 16px; }
     .np-block { padding: 16px; }
-    .np-topbar-right { gap: 12px; }
 
     /* 触屏：控件统一 40，主按钮 44 */
     .np-select, .np-input, .np-stepper, .np-switch { height: 40px; }
