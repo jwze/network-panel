@@ -121,19 +121,32 @@ function loadGb() {
 }
 
 // ---- 单栈探测：只解析 A / AAAA 的端点，天然区分本机是否有该协议出口 ----
-// 三选一竞速，都带 Access-Control-Allow-Origin: *；全失败即视为「没有」，留空。
+// 并行竞速（哪个先回来用哪个，多源不增加延迟），都带 Access-Control-Allow-Origin: *。
+// 每族放多个不同服务商 / 不同网络的端点：任何一个域名被墙、被代理规则拦掉、
+// 或出口节点单栈，都不会让整列空白——这正是「只有 IPv6 没有 IPv4」的主因。
+// ipw.cn 是国内 IPv4 / IPv6 专用端点，国内网络下几十毫秒就能回，不依赖代理。
 const V4_SOURCES = [
+  'https://api4.ipify.org',
   'https://v4.ident.me/.json',
   'https://ipv4.icanhazip.com',
-  'https://api-ipv4.ip.sb/ip'
+  'https://api-ipv4.ip.sb/ip',
+  'https://ipv4.myip.wtf/text',
+  'https://4.ipw.cn/'
 ]
 const V6_SOURCES = [
+  'https://api6.ipify.org',
   'https://v6.ident.me/.json',
   'https://ipv6.icanhazip.com',
-  'https://api-ipv6.ip.sb/ip'
+  'https://api-ipv6.ip.sb/ip',
+  'https://ipv6.myip.wtf/text',
+  'https://6.ipw.cn/'
 ]
 
-function probeFamily(urls) {
+const isV6 = ip => !!ip && ip.includes(':')
+
+// wantV6 强制校验协议族：端点偶尔会返回「另一族」的地址（NAT64 / 代理串味），
+// 不校验就会把 IPv6 写进 IPv4 列，或反之。
+function probeFamily(urls, wantV6) {
   return firstSuccess(urls.map(url => async () => {
     const text = (await readSource(url, FAMILY_TIMEOUT)).trim()
     let ip = ''
@@ -145,37 +158,46 @@ function probeFamily(urls) {
     }
     ip = String(ip).trim()
     if (!/^[\da-fA-F:.]+$/.test(ip) || ip.length < 7) throw new Error('invalid ip payload')
+    if (isV6(ip) !== wantV6) throw new Error('unexpected address family')
     return ip
   }))
 }
 
-const isV6 = ip => !!ip && ip.includes(':')
-
 // 写入三列：主源的 IP 覆盖对应协议列，另一协议用单栈结果补齐，归属地单独成列
+// 空单元格挂 title：鼠标悬停能看出是「真的没有该协议」还是「探测端点全挂」，不占版面。
 function renderEgress(row, main, fam) {
   if (!row) return
   const v4 = main && !isV6(main.ip) ? main.ip : (fam.v4 || '')
   const v6 = main && isV6(main.ip) ? main.ip : (fam.v6 || '')
   const region = main ? (main.region || '') : ''
-  const set = (suffix, value) => {
+  const set = (suffix, value, hint) => {
     const el = document.getElementById(row.id + suffix)
-    if (el) el.textContent = value || ''
+    if (!el) return
+    el.textContent = value || ''
+    el.title = value || hint || ''
   }
-  set('4', v4)
-  set('6', v6)
-  set('Region', region)
+  set('4', v4, familiesHint.v4)
+  set('6', v6, familiesHint.v6)
+  set('Region', region, '')
 }
 
-// 双栈探测结果两行共用，成功后 30s 内不重复请求；全部失败则 5s 后重试
+// 双栈探测失败时给空单元格用的说明（不显示在版面上，只做悬停提示）
+const familiesHint = {
+  v4: `未探测到 IPv4 出口：${V4_SOURCES.length} 个 IPv4 专用端点全部不可达，通常是对代理只放行 IPv6、或本地 IPv4 出口异常`,
+  v6: `未探测到 IPv6 出口：${V6_SOURCES.length} 个 IPv6 专用端点全部不可达，通常是本机或代理出口没有 IPv6`
+}
+
+// 双栈探测结果两行共用，成功后 30s 内不重复请求；有任一族失败则 5s 后重试
 async function refreshFamilies() {
   if (familiesBusy || Date.now() < familiesRetryAt) return
   familiesBusy = true
   try {
     const [v4, v6] = await Promise.all([
-      probeFamily(V4_SOURCES).catch(() => ''),
-      probeFamily(V6_SOURCES).catch(() => '')
+      probeFamily(V4_SOURCES, false).catch(() => ''),
+      probeFamily(V6_SOURCES, true).catch(() => '')
     ])
-    families = { v4, v6 }
+    // 单侧失败时保留上一次成功值：偶发超时不该把已经拿到的 IP 抹成空白
+    families = { v4: v4 || families.v4, v6: v6 || families.v6 }
     familiesRetryAt = Date.now() + (v4 && v6 ? 30000 : 5000)
     renderEgress(document.getElementById('ipcn'), cnResult, families)
     renderEgress(document.getElementById('ipgb'), gbResult, families)
